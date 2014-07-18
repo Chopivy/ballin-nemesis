@@ -4,7 +4,7 @@
 //Pin 3 of the LM35 goes into ground (GND) of the arduino
 //http://goo.gl/Bd60lX
 
-int rawvoltage;
+int rawdata;
 int tempPin = 0;
 float celsius;
 float millivolts;
@@ -15,8 +15,8 @@ void setup() {
 }
 
 void loop() {
-  rawvoltage = analogRead(tempPin);
-  millivolts = (rawvoltage/1024.0) * 5000;
+  rawdata = analogRead(tempPin);
+  millivolts = (rawdata/1024.0) * 5000;
   celsius = millivolts / 10;
   Serial.print(celsius);
   Serial.println();
