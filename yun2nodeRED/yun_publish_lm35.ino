@@ -4,9 +4,8 @@
 #include <YunClient.h>
 #include <PubSubClient.h>
 // Update these with values suitable for your network.
-byte server[] = { 192, 168, 1, 14 }; // mosquitto
-byte ip[]     = { 192, 168, 1, 11 }; // yun
-char buff[]   = { '0', '0', '0', '0', '\0' };
+byte server[] = { 192, 168, 1, 11 }; // mosquitto
+char buff[5];
 
 void callback(char* topic, byte* payload, unsigned int length);
 
@@ -32,6 +31,32 @@ void setup()
     Serial.println("client connected");
   }
 }
+
+void loop()
+{
+  rawData = analogRead(analogPin);
+  data = String(rawData);
+  len = data.length();
+  
+  for(i=0; i < len; i++)
+    buff[i] = data[i];
+  buff[i] = '\0';
+  
+  if (client.connect("arduinoClient")) {
+    client.publish("yun/sensor/1", buff);
+    Serial.println(data);
+   }
+}
+void callback(char* topic, byte* payload, unsigned int length) {
+}
+
+//nodeRed flow:
+// <mqtt| <f()> |debug>
+// <mqtt|: Broker="localhost:1883"; Topic="yun/sensor/1"
+// <f()>: var tempC = parseInt(msg.payload) * (500/1024);
+//        msg.payload = tempC.toString();
+//        return msg;
+
 
 void loop()
 {
